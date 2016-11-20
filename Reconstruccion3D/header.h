@@ -10,12 +10,12 @@
 #include <opencv2/legacy/legacy.hpp>
 using namespace cv;
 
-#pragma comment(lib,"opencv_core249d.lib")
-#pragma comment(lib,"opencv_highgui249d.lib")
-#pragma comment(lib,"opencv_imgproc249d.lib")
-#pragma comment(lib,"opencv_features2d249d.lib")
-#pragma comment(lib,"opencv_calib3d249d.lib")
-#pragma comment(lib,"opencv_legacy249d.lib")
+#pragma comment(lib,"opencv_core2413d.lib")
+#pragma comment(lib,"opencv_highgui2413d.lib")
+#pragma comment(lib,"opencv_imgproc2413d.lib")
+#pragma comment(lib,"opencv_features2d2413d.lib")
+#pragma comment(lib,"opencv_calib3d2413d.lib")
+#pragma comment(lib,"opencv_legacy2413d.lib")
 
 //#include <gl/GLU.h>
 //#include "glut.h"
