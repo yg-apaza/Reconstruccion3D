@@ -19,7 +19,6 @@ using namespace cv;
 
 //#include <gl/GLU.h>
 //#include "glut.h"
-#include <GL\glew.h>
 #include <GL\freeglut.h>
 //#pragma comment(lib,"glaux.lib")
 //#pragma comment(lib,"opengl32.lib")
