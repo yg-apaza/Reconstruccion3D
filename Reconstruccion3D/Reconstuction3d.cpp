@@ -32,7 +32,7 @@ namespace reconstruction
 
 	//#define PARAM	// algorithm parameters that can be modified
 	//PARAM
-	Algorithm g_algo = DENSE;//DENSE; // 2 algorithms to select corresponding points and reconstruct 3D scene
+	Algorithm g_algo = FEATURE_PT;//DENSE; // 2 algorithms to select corresponding points and reconstruct 3D scene
 
 };
 

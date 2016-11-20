@@ -1,4 +1,5 @@
 #include "header.h"
+#include "opencv2/nonfree/nonfree.hpp"
 
 // sift is 50 times slower but get 7 times more matched points
 // FAST detect more points than SURF
@@ -15,25 +16,21 @@
 // choose the corresponding points in the stereo images for 3d reconstruction
 void GetPair( Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR ) 
 {
+	cv::initModule_nonfree();
 	Mat descriptorsL, descriptorsR;
 	double tt = (double)getTickCount();
-
 	Ptr<FeatureDetector> detector = FeatureDetector::create( DETECTOR_TYPE ); // factory mode
 	vector<KeyPoint> keypointsL, keypointsR; 
 	detector->detect( imgL, keypointsL );
 	detector->detect( imgR, keypointsR );
-
 	Ptr<DescriptorExtractor> de = DescriptorExtractor::create(DESCRIPTOR_TYPE);
 	//SurfDescriptorExtractor de(4,2,true);
 	de->compute( imgL, keypointsL, descriptorsL );
 	de->compute( imgR, keypointsR, descriptorsR );
-
 	tt = ((double)getTickCount() - tt)/getTickFrequency(); // 620*555 pic, about 2s for SURF, 120s for SIFT
-
 	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create( MATCHER_TYPE );
 	vector<vector<DMatch>> matches;
 	matcher->knnMatch( descriptorsL, descriptorsR, matches, 2 ); // L:query, R:train
-
 	vector<DMatch> passedMatches; // save for drawing
 	DMatch m1, m2;
 	vector<Point2f> ptsRtemp, ptsLtemp;
