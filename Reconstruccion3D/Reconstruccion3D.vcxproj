@@ -148,7 +148,6 @@
     <ClCompile Include="cvFuncs.cpp" />
     <ClCompile Include="cvFuncs2.cpp" />
     <ClCompile Include="glFuncs.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Reconstuction3d.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
