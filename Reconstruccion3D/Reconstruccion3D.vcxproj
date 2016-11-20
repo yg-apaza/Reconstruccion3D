@@ -152,9 +152,6 @@
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="freeglut.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="view1.jpg" />
     <Image Include="view5.jpg" />
   </ItemGroup>
