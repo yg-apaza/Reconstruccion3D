@@ -72,8 +72,8 @@ int main(int argc, char* argv[])
 	//	return NULL;
 	//}
 
-	Mat imgL = imread("D:\\views\\view1.png"); 
-	Mat	imgR = imread("D:\\views\\view5.png");
+	Mat imgL = imread("view1.jpg"); 
+	Mat	imgR = imread("view5.jpg");
 	imshow("l",imgL);
 	//waitKey(0);
 
