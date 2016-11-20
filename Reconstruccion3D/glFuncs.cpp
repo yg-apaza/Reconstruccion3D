@@ -1,21 +1,19 @@
 #include "header.h"
 
-
 #if !defined(GLUT_WHEEL_UP)
 #  define GLUT_WHEEL_UP   3
 #  define GLUT_WHEEL_DOWN 4
 #endif
 
-
 // draw a triangle texture
-void MapTexTri( Mat & texImg, Point2f pt2D[3], Point3f pt3D[3] ) 
+void MapTexTri(Mat & texImg, Point2f pt2D[3], Point3f pt3D[3]) 
 {
 	//glEnable(GL_TEXTURE_2D);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,texImg.cols, texImg.rows, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, texImg.data);
+					GL_RGB, GL_UNSIGNED_BYTE, texImg.data);
 
 	//glDepthMask(GL_FALSE);
 	//glDisable(GL_LIGHTING);
@@ -35,9 +33,9 @@ void MapTexTri( Mat & texImg, Point2f pt2D[3], Point3f pt3D[3] )
 	//glDisable(GL_BLEND);
 }
 
-GLuint Create3DTexture( Mat &img, vector<Vec3i> &tri, 
-					   vector<Point2f> pts2DTex, vector<Point3f> &pts3D, 
-					    Point3f center3D, Vec3f size3D ) 
+GLuint Create3DTexture(Mat &img, vector<Vec3i> &tri, 
+						vector<Point2f> pts2DTex, vector<Point3f> &pts3D, 
+						Point3f center3D, Vec3f size3D) 
 {
 	GLuint tex = glGenLists(1);
 	int error = glGetError();
@@ -47,7 +45,7 @@ GLuint Create3DTexture( Mat &img, vector<Vec3i> &tri,
 
 	Mat texImg;
 	cvtColor(img, img, CV_BGR2RGB);
-	resize(img, texImg, Size(512,512)); // seems no need to do this
+	resize(img, texImg, Size(512, 512)); // seems no need to do this
 
 	glNewList(tex, GL_COMPILE);
 
@@ -58,7 +56,7 @@ GLuint Create3DTexture( Mat &img, vector<Vec3i> &tri,
 
 	glDisable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
-	for ( ; iterTri != tri.end(); iterTri++)
+	for (; iterTri != tri.end(); iterTri++)
 	{
 		Vec3i &vertices = *iterTri;
 		int ptIdx;
@@ -69,7 +67,7 @@ GLuint Create3DTexture( Mat &img, vector<Vec3i> &tri,
 			//else cout<<ptIdx<<"\t";
 			pt2D[i].x = pts2DTex[ptIdx].x / img.cols;
 			pt2D[i].y = pts2DTex[ptIdx].y / img.rows;
-			pt3D[i] = (pts3D[ptIdx] - center3D) * (1.f / max(size3D[0],size3D[1]));
+			pt3D[i] = (pts3D[ptIdx] - center3D) * (1.f / max(size3D[0], size3D[1]));
 			//pt3D[i].z -= offset;
 		}
 
@@ -90,7 +88,6 @@ GLuint Create3DTexture( Mat &img, vector<Vec3i> &tri,
 
 	glEndList();
 	return tex;
-
 }
 
 #define PI_180			(CV_PI/180)
@@ -110,7 +107,7 @@ void InitGl()
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(600, 600);
 	glutInitWindowPosition(100, 100);
-	glutCreateWindow("3D reconstruction");
+	glutCreateWindow("3D Reconstruction");
 	//	glEnable(GL_POINT_SMOOTH);
 	//	glHint(GL_POINT_SMOOTH_HINT,GL_DONT_CARE);
 	//	glPointSize(2.5);
@@ -123,18 +120,18 @@ void InitGl()
 	glutMouseFunc(mouseGl);
 	glutMotionFunc(mouse_move_Gl);
 
-	 //Init_lightGl();
+	//Init_lightGl();
 	wglUseFontBitmaps(wglGetCurrentDC(), 0, 256, 1000);
 	glEnable(GL_DEPTH_TEST);
 }
 
 void Init_lightGl() 
 {
-	GLfloat light_position1[] = { 0.0, -3.0, -3.0, 0.0 };
-	GLfloat light_ambient1[] = { 1, 1, 1, 1 };
-	GLfloat light_diffuse1[] = { 0.80, 0.8, 0.8, 1 };
-	GLfloat light_specular1[] = { 0.75, 0.75, 0.75, 1 };
-	GLfloat light_shine1[] = { 50 };
+	GLfloat light_position1[] = {0.0, -3.0, -3.0, 0.0};
+	GLfloat light_ambient1[] = {1, 1, 1, 1};
+	GLfloat light_diffuse1[] = {0.80, 0.8, 0.8, 1};
+	GLfloat light_specular1[] = {0.75, 0.75, 0.75, 1};
+	GLfloat light_shine1[] = {50};
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT , light_ambient1);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE , light_diffuse1 );
@@ -147,7 +144,7 @@ void Init_lightGl()
 	glEnable(GL_NORMALIZE);
 }
 
-void Show( GLuint tex, Point3f center3D, Vec3i size3D ) 
+void Show(GLuint tex, Point3f center3D, Vec3i size3D) 
 {
 	//g_tx = 0;
 	//g_ty = 0;
@@ -174,21 +171,21 @@ void displayGl()
 	//glRotatef(g_rx, 0,1,0);
 	//glTranslatef(-g_tx, -g_ty, -g_tz);
 	//float len = abs(g_tz);
-	float eyey = g_tz*sin(g_ry*PI_180),
-		eyex = g_tz*cos(g_ry*PI_180)*cos(g_rx*PI_180),
-		eyez = g_tz*cos(g_ry*PI_180)*sin(g_rx*PI_180);
+	float eyey = g_tz * sin(g_ry * PI_180),
+			eyex = g_tz * cos(g_ry * PI_180) * cos(g_rx * PI_180),
+			eyez = g_tz * cos(g_ry  *PI_180) * sin(g_rx * PI_180);
 	gluLookAt(eyex,eyey,eyez, 0,0,0, 0,1,0);
 	TRACE("%.1f,%.1f,%.1f,%.1f,%.1f\n", g_rx, g_ry, eyex, eyey, eyez);
 
-	glColor3f(1,1,1);
+	glColor3f(1, 1, 1);
 	glCallList(g_tex);
 
 	glPopMatrix();
 	glPushMatrix();
-	glColor3f(0,1,0);
+	glColor3f(0, 1, 0);
 	glTranslatef(-0.08, .08, -0.2); 
 	glListBase(1000);
-	glRasterPos3f(0,0,0);
+	glRasterPos3f(0, 0, 0);
 	string help = "use arrow keys to rotate, mouse wheel to zoom";
 	glCallLists(help.size(), GL_UNSIGNED_BYTE, help.c_str());
 
@@ -211,46 +208,46 @@ void mouseGl(int button, int state, int x, int y)
 {
 	switch(button) 
 	{
-	//case GLUT_LEFT_BUTTON:
-	//	if (state == GLUT_DOWN) 
-	//	{
-	//		g_bLeftDown = true;
-	//		g_mouse_x = x;
-	//		g_mouse_y = y;
-	//	}
-	//	else if (state == GLUT_UP) 
-	//	{
-	//		g_bLeftDown = false;
-	//		
-	//	}
-	//	break;
+		//case GLUT_LEFT_BUTTON:
+		//	if (state == GLUT_DOWN) 
+		//	{
+		//		g_bLeftDown = true;
+		//		g_mouse_x = x;
+		//		g_mouse_y = y;
+		//	}
+		//	else if (state == GLUT_UP) 
+		//	{
+		//		g_bLeftDown = false;
+		//		
+		//	}
+		//	break;
 
-	//case GLUT_RIGHT_BUTTON:
-	//	if (state == GLUT_DOWN) 
-	//	{
-	//		g_bRightDown = true;
-	//		g_mouse_x = x;
-	//		g_mouse_y = y;
-	//	}
-	//	else if (state == GLUT_UP)
-	//	{
-	//		g_tx += g_txBuf;
-	//		g_ty += g_tyBuf;
-	//		g_txBuf = g_tyBuf = 0;
-	//		g_bRightDown = false;
-	//	}
-	//	break;
+		//case GLUT_RIGHT_BUTTON:
+		//	if (state == GLUT_DOWN) 
+		//	{
+		//		g_bRightDown = true;
+		//		g_mouse_x = x;
+		//		g_mouse_y = y;
+		//	}
+		//	else if (state == GLUT_UP)
+		//	{
+		//		g_tx += g_txBuf;
+		//		g_ty += g_tyBuf;
+		//		g_txBuf = g_tyBuf = 0;
+		//		g_bRightDown = false;
+		//	}
+		//	break;
 
-	case GLUT_WHEEL_UP:
-		g_tz -= TRANSLATE_STEP;
-		break;
+		case GLUT_WHEEL_UP:
+			g_tz -= TRANSLATE_STEP;
+			break;
 
-	case  GLUT_WHEEL_DOWN:
-		g_tz += TRANSLATE_STEP;
-		break;
+		case  GLUT_WHEEL_DOWN:
+			g_tz += TRANSLATE_STEP;
+			break;
 
-	default:
-		break;
+		default:
+			break;
 	}
 	if (g_tz < 0) g_tz = 0;
 	glutPostRedisplay();

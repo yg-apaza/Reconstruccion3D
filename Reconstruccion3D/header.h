@@ -37,40 +37,34 @@ using namespace std;
 
 //#include <math.h>
 
-
-
-
-bool LoadPtsPairs( vector<Point2f> &ptsL, vector<Point2f> &ptsR, string &filename );
-
-void SavePtsPairs( vector<Point2f> &ptsL, vector<Point2f> &ptsR, string &filename );
-
+bool LoadPtsPairs(vector<Point2f> &ptsL, vector<Point2f> &ptsR, string &filename);
+void SavePtsPairs(vector<Point2f> &ptsL, vector<Point2f> &ptsR, string &filename);
 
 /* cv functions */
-void StereoTo3D( vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pts3D, 
+void StereoTo3D(vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pts3D, 
 				float focalLenInPixel, float baselineInMM, 
 				Mat img, Point3f &center3D, Vec3f &size3D);
 
-void TriSubDiv( vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri );
+void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri);
 
-void GetPair( Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR );
+void GetPair(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR);
 
-void GetPairBM( Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR );
+void GetPairBM(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR);
 
-void CalcDisparity( Mat &imgL, Mat &imgR, Mat_<float> &disp, int nod );
+void CalcDisparity(Mat &imgL, Mat &imgR, Mat_<float> &disp, int nod);
 
 //void GetPairSegBM( Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR, vector<int> &ptNum );
 
 //void TriSubDivSeg( vector<Point2f> &ptsL, vector<int> &ptNum, Mat &imgL, vector<Vec3i> &tri );
 
-
 /* CG functions */
-void MapTexTri( Mat & texImg, Point2f pt2D, Point3f pt3D );
+void MapTexTri(Mat & texImg, Point2f pt2D, Point3f pt3D);
 
-GLuint Create3DTexture( Mat &img, vector<Vec3i> &tri, 
+GLuint Create3DTexture(Mat &img, vector<Vec3i> &tri, 
 					   vector<Point2f> pts2DTex, vector<Point3f> &pts3D, 
-					   Point3f center3D, Vec3f size3D );
+					   Point3f center3D, Vec3f size3D);
 
-void Show( GLuint tex, Point3f center3D, Vec3i size3D );
+void Show(GLuint tex, Point3f center3D, Vec3i size3D);
 
 /* OpenGL functions*/
 void InitGl();
