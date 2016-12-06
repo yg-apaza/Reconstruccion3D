@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 /************************************************************************************/
 /* Use OpenCV 2.2 SURF algorithm(set g_algo = DENSE, functions in cvFuncs.cpp) or	*/
 /*	StereoSGBM algorithm(set g_algo = FEATURE_PT, funcs in cvFuncs2.cpp) to recover	*/
@@ -11,10 +9,9 @@
 /*	glitches.																		*/
 /* Yan Ke, THUEE, xjed09@gmail.com, 201106											*/
 /************************************************************************************/
-#include "stdlib.h"  
-#include <direct.h>  
-#include <string.h>  
 
+#include "stdlib.h"
+#include <string.h>
 #include "header.h"
 
 namespace reconstruction
@@ -37,20 +34,7 @@ int main(int argc, char* argv[])
 	//	//filenameL = "\\view1.png", filenameR = "\\view5.png"; // L: the camera on the left
 	//	filenameL = "\\view1s.jpg", filenameR = "\\view5s.jpg"; // L: the camera on the left
 
-	char* buffer;  
-
-	// Get the current working directory:   
-	if((buffer = _getcwd(NULL, 0)) == NULL)  
-		perror("_getcwd error");  
-	else  
-	{  
-		printf("%s\nLength: %d\n", buffer, strnlen(buffer, 1024));  
-		free(buffer);  
-	} 
-
 	//cout<<folder + groupname + filenameL<<endl;
-
-	string str = "view1s.jpg";
 
 	//FILE* fp;
 

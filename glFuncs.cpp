@@ -121,7 +121,7 @@ void InitGl()
 	glutMotionFunc(mouse_move_Gl);
 
 	//Init_lightGl();
-	wglUseFontBitmaps(wglGetCurrentDC(), 0, 256, 1000);
+	//wglUseFontBitmaps(wglGetCurrentDC(), 0, 256, 1000);
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -175,7 +175,7 @@ void displayGl()
 			eyex = g_tz * cos(g_ry * PI_180) * cos(g_rx * PI_180),
 			eyez = g_tz * cos(g_ry  *PI_180) * sin(g_rx * PI_180);
 	gluLookAt(eyex,eyey,eyez, 0,0,0, 0,1,0);
-	TRACE("%.1f,%.1f,%.1f,%.1f,%.1f\n", g_rx, g_ry, eyex, eyey, eyez);
+	//TRACE("%.1f,%.1f,%.1f,%.1f,%.1f\n", g_rx, g_ry, eyex, eyey, eyez);
 
 	glColor3f(1, 1, 1);
 	glCallList(g_tex);

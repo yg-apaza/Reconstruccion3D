@@ -180,10 +180,10 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 			loc.x < disp.cols && loc.y < disp.rows)
 		{
 			ptsL.push_back(loc);
-			ptsR.push_back(Point2f(loc) - Point2f(disp(loc), 0));
-			circle(dShow, Point2f(loc) - Point2f(nod, 0), 2, CV_RGB(255, 0, 255), 2);
+			ptsR.push_back(Point2f(loc.x, loc.y) - Point2f(disp(loc), 0));
+			circle(dShow, Point2f(loc.x, loc.y) - Point2f(nod, 0), 2, CV_RGB(255, 0, 255), 2);
 			cnt++;
-			sprintf_s(str, 10, "%.1f", disp(loc));
+			snprintf(str, 10, "%.1f", disp(loc));
 			putText(dShow, str, Point(loc.x - nod + 3, loc.y), FONT_HERSHEY_SIMPLEX, .3, CV_RGB(255, 0, 255));
 			imshow("Disparity",dShow);
 		}

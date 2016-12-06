@@ -19,15 +19,11 @@ using namespace cv;
 
 //#include <gl/GLU.h>
 //#include "glut.h"
-#include <GL\freeglut.h>
+#include <GL/glut.h>
 //#pragma comment(lib,"glaux.lib")
 //#pragma comment(lib,"opengl32.lib")
 //#pragma comment(lib,"glut32.lib")
 //#pragma comment(lib,"glut.lib")
-
-#include <atlstr.h> // use STL string instead, although not as convenient...
-#include <atltrace.h>
-#define TRACE ATLTRACE
 
 #include <iostream>
 #include <fstream>

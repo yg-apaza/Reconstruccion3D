@@ -1,5 +1,5 @@
 #include "header.h"
-
+#include <stdio.h>
 #include "opencv2/nonfree/nonfree.hpp"
 
 // sift is 50 times slower but get 7 times more matched points
@@ -30,7 +30,7 @@ void GetPair(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR)
 	de->compute(imgR, keypointsR, descriptorsR);
 	tt = ((double) getTickCount() - tt) / getTickFrequency(); // 620*555 pic, about 2s for SURF, 120s for SIFT
 	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(MATCHER_TYPE);
-	vector<vector<DMatch>> matches;
+	vector< vector<DMatch> > matches;
 	matcher->knnMatch(descriptorsL, descriptorsR, matches, 2); // L:query, R:train
 	vector<DMatch> passedMatches; // save for drawing
 	DMatch m1, m2;
@@ -82,7 +82,7 @@ void GetPair(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR)
 	drawMatches(imgL, keypointsL, imgR, keypointsR, passedMatches, outImg, 
 		Scalar::all(-1), Scalar::all(-1), matchesMask, DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 	char title[50];
-	sprintf_s(title, 50, "%.3f s, %d matches, %d passed", tt, matches.size(), cnt);
+	snprintf(title, 50, "%.3f s, %d matches, %d passed", tt, matches.size(), cnt);
 	imshow(title, outImg);
 	waitKey();
 }
@@ -207,7 +207,7 @@ void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri)
 
 	//RemoveDuplicate(tri);
 	char title[100];
-	sprintf_s(title, 100, "Delaunay: %d Triangles", tri.size());
+	snprintf(title, 100, "Delaunay: %d Triangles", tri.size());
 	imshow(title, imgShow);
 	waitKey();
 }
@@ -257,7 +257,7 @@ void StereoTo3D( vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pt
 		if ((cnt++) % showIntv == 0)
 		{
 			Scalar color = CV_RGB(rand()&64, rand()&64, rand()&64);
-			sprintf_s(str, 100, "%.0f,%.0f,%.0f", pt3D.x, pt3D.y, pt3D.z);
+			snprintf(str, 100, "%.0f,%.0f,%.0f", pt3D.x, pt3D.y, pt3D.z);
 			putText(imgShow, str, Point(xl-13,ylr-3), FONT_HERSHEY_SIMPLEX, .3, color);
 			circle(imgShow, *iterL, 2, color, 3);
 		}
