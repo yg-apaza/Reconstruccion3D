@@ -17,7 +17,7 @@ current_source=Reconstruction3d.cpp
 path_char=/
 [source]
 path=Reconstruction3d.cpp
-cursor=8:14
+cursor=11:0
 open=true
 [source]
 path=cvFuncs.cpp

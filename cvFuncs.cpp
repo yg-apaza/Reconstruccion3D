@@ -84,7 +84,7 @@ void GetPair(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR)
 	char title[50];
 	snprintf(title, 50, "%.3f s, %d matches, %d passed", tt, matches.size(), cnt);
 	imshow(title, outImg);
-	waitKey();
+	//waitKey();
 }
 
 // used for doing delaunay trianglation with opencv function
@@ -209,7 +209,7 @@ void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri)
 	char title[100];
 	snprintf(title, 100, "Delaunay: %d Triangles", tri.size());
 	imshow(title, imgShow);
-	waitKey();
+	//waitKey();
 }
 
 // calculate 3d coordinates.
@@ -264,7 +264,7 @@ void StereoTo3D( vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pt
 	}
 
 	imshow("Back project", imgShow);
-	waitKey();
+	//waitKey();
 
 	center3D.x = (minX + maxX) / 2;
 	center3D.y = (minY + maxY) / 2;
