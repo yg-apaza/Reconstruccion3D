@@ -1,7 +1,4 @@
 /************************************************************************************/
-/* Use OpenCV 2.2 SURF algorithm(set g_algo = DENSE, functions in cvFuncs.cpp) or	*/
-/*	StereoSGBM algorithm(set g_algo = FEATURE_PT, funcs in cvFuncs2.cpp) to recover	*/
-/*	stereo 2D images to 3D coordinates, then use OpenGL to reconstruct 3D model.	*/
 /* The 2 stereo images should have parallel principal axis.							*/
 /* I cannot guarantee the reconstruct effect, especially when the images are shot	*/
 /*	with inexact parallel principal axis.											*/
@@ -16,38 +13,18 @@
 
 namespace reconstruction
 {
-	enum Algorithm {FEATURE_PT, DENSE};
-	//#define PARAM	// algorithm parameters that can be modified
-	//PARAM
-	Algorithm g_algo = FEATURE_PT;//DENSE; // 2 algorithms to select corresponding points and reconstruct 3D scene
+	enum Algorithm {FEATURE_POINT, BLOCK_MATCHING};
+	Algorithm g_algo = BLOCK_MATCHING;//BLOCK_MATCHING; // 2 algorithms to select corresponding points and reconstruct 3D scene
 };
 
 using namespace reconstruction;
 
 int main(int argc, char* argv[])
 {
-	/************************************************************************/
-	/* load and resize images                                               */
-	/************************************************************************/
-	//string folder = "D:\\Download\\code_all\\code_all\\stereoimage-7\\",
-	//	groupname = "Cloth", // Cloth,Midd,Baby,Bowling,Bed
-	//	//filenameL = "\\view1.png", filenameR = "\\view5.png"; // L: the camera on the left
-	//	filenameL = "\\view1s.jpg", filenameR = "\\view5s.jpg"; // L: the camera on the left
-
-	//cout<<folder + groupname + filenameL<<endl;
-
-	//FILE* fp;
-
-	//fp = fopen(str.c_str(), "rb");//这块调试，似乎没东西。。。
-	//if (!fp)
-	//{
-	//	return NULL;
-	//}
-
 	Mat imgL = imread("view1.jpg"); 
 	Mat	imgR = imread("view5.jpg");
-	imshow("l",imgL);
-	//waitKey(0);
+	imshow("Imagen Izquierda", imgL);
+	waitKey(0);
 
 	if (!(imgL.data) || !(imgR.data))
 	{
@@ -76,13 +53,9 @@ int main(int argc, char* argv[])
 	cout << "Calculating feature points ..." << endl;
 	vector<Point2f> ptsL, ptsR;
 	vector<int> ptNum;
-	if (g_algo == FEATURE_PT)
-	{
-		//if ( ! LoadPtsPairs(ptsL, ptsR, groupname+".pairs"))	{
+	if (g_algo == FEATURE_POINT)
 		GetPair(imgL, imgR, ptsL, ptsR);
-		//SavePtsPairs(ptsL, ptsR, groupname+".pairs");	}
-	}
-	else if (g_algo == DENSE)
+	else if (g_algo == BLOCK_MATCHING)
 		GetPairBM(imgL, imgR, ptsL, ptsR);
 
 	/************************************************************************/
@@ -121,43 +94,4 @@ int main(int argc, char* argv[])
 	Show(tex, center3D, size3D);
 
 	return 0;
-}
-
-
-// for FEATURE_PT algorithm, save the corresponding points' coordinates
-void SavePtsPairs(vector<Point2f> &ptsL, vector<Point2f> &ptsR, string &filename) 
-{
-	ofstream os(filename.c_str());
-	vector<Point2f>::iterator iterL = ptsL.begin(), iterR = ptsR.begin();
-	os << ptsL.size() << endl;
-
-	for (; iterL != ptsL.end(); iterL++, iterR++)
-	{
-		os << iterL->x << '\t' << iterL->y << "\t\t"
-			<< iterR->x << '\t' << iterR->y <<endl;
-	}
-	os.close();
-}
-
-bool LoadPtsPairs(vector<Point2f> &ptsL, vector<Point2f> &ptsR, string &filename) 
-{
-	ifstream is(filename.c_str());
-	if (!is)
-	{
-		cerr << filename << " unable to read" << endl;
-		return false;
-	}
-
-	Point2f buf;
-	int cnt;
-	is >> cnt;
-	for (int i = 0; i < cnt; i++)
-	{
-		is >> buf.x >> buf.y;
-		ptsL.push_back(buf);
-		is >> buf.x >> buf.y;
-		ptsR.push_back(buf);
-	}
-	is.close();
-	return true;
 }
