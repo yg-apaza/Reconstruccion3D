@@ -214,5 +214,5 @@ void GetPairBM(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &pts
 
 	int numOfEgdePt = 80, numOfFlatPt = 50;	// algorithm parameters that can be modified
 	ChooseKeyPointsBM(disp, numOfDisp, numOfEgdePt, numOfFlatPt, ptsL, ptsR);
-	//waitKey();
+	waitKey();
 }
