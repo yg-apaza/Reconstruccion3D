@@ -1,20 +1,11 @@
-#include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/imgproc/imgproc_c.h>
-#include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/features2d/features2d.hpp>
 #include <opencv2/legacy/legacy.hpp>
-
-using namespace cv;
-
+#include <opencv2/nonfree/nonfree.hpp>
 #include <GL/glut.h>
-
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <time.h>
 
+using namespace cv;
 using namespace std;
 
 /* Reconstruction 3D */

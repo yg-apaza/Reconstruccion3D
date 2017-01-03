@@ -7,14 +7,12 @@
 /* Yan Ke, THUEE, xjed09@gmail.com, 201106											*/
 /************************************************************************************/
 
-#include "stdlib.h"
-#include <string.h>
 #include "header.h"
 
 namespace reconstruction
 {
 	enum Algorithm {FEATURE_POINT, BLOCK_MATCHING};
-	Algorithm g_algo = BLOCK_MATCHING;//BLOCK_MATCHING; // 2 algorithms to select corresponding points and reconstruct 3D scene
+	Algorithm g_algo = FEATURE_POINT;//BLOCK_MATCHING; // 2 algorithms to select corresponding points and reconstruct 3D scene
 };
 
 using namespace reconstruction;

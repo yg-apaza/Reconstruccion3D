@@ -1,8 +1,6 @@
 #include "header.h"
-#include <stdio.h>
-#include <opencv2/nonfree/nonfree.hpp>
 
-// sift is 50 times slower but get 7 times more matched points
+// SIFT is 50 times slower but get 7 times more matched points
 // FAST detect more points than SURF
 // STAR/MSER generate very few keypoints,
 #define DETECTOR_TYPE	"FAST" // FAST, SIFT, SURF, STAR, MSER, GFTT, HARRIS ...see the create function
@@ -12,7 +10,6 @@
 #define MAXM_FILTER_TH	.8	// threshold used in GetPair
 #define HOMO_FILTER_TH	60	// threshold used in GetPair
 #define NEAR_FILTER_TH	40	// diff points should have distance more than NEAR_FILTER_TH
-
 
 // choose the corresponding points in the stereo images for 3d reconstruction
 void GetPair(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR) 

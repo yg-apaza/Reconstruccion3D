@@ -1,5 +1,4 @@
 #include "header.h"
-#include <opencv2/nonfree/nonfree.hpp>
 
 // used for doing delaunay trianglation with opencv function
 bool isGoodTri(Vec3i &v, vector<Vec3i> & tri) 
