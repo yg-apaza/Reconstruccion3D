@@ -1,11 +1,11 @@
 #include "header.h"
 
-// roughly smooth the glitches on the disparity map
+// Suaviza las fallas en el mapa de disparidad
 void FixDisparity(Mat_<float> & disp, int numberOfDisparities) 
 {
 	Mat_<float> disp1;
 	float lastPixel = 10;
-	float minDisparity = 23;// algorithm parameters that can be modified
+	float minDisparity = 23; // Número mínimo de disparidades
 	for (int i = 0; i < disp.rows; i++)
 	{
 		for (int j = numberOfDisparities; j < disp.cols; j++)
@@ -14,7 +14,7 @@ void FixDisparity(Mat_<float> & disp, int numberOfDisparities)
 			else lastPixel = disp(i, j);
 		}
 	}
-	int an = 4;	// algorithm parameters that can be modified
+	int an = 4;
 	copyMakeBorder(disp, disp1, an, an, an, an, BORDER_REPLICATE);
 	Mat element = getStructuringElement(MORPH_ELLIPSE, Size(an * 2 + 1, an * 2 + 1));
 	morphologyEx(disp1, disp1, CV_MOP_OPEN, element);
@@ -22,8 +22,10 @@ void FixDisparity(Mat_<float> & disp, int numberOfDisparities)
 	disp = disp1(Range(an, disp.rows - an), Range(an, disp.cols - an)).clone();
 }
 
+// Calcula el mapa de disparidades
 void CalcDisparity(Mat &imgL, Mat &imgR, Mat_<float> &disp, int nod) 
 {
+	// Algoritmos de block matching disponibles
 	enum {STEREO_BM = 0, STEREO_SGBM = 1, STEREO_HH = 2};
 	int alg = STEREO_SGBM;
 
@@ -46,14 +48,14 @@ void CalcDisparity(Mat &imgL, Mat &imgR, Mat_<float> &disp, int nod)
 	sgbm(imgL, imgR, dispTemp);
 	dispTemp.convertTo(disp, CV_32FC1, 1.0 / 16);
 	disp.convertTo(disp8, CV_8U, 255.0 / nod);
-	imshow("Disparidad de origen", disp8);
-	//waitKey();
+	imshow("Disparidad original", disp8);
 
 	FixDisparity(disp, nod);
 	disp.convertTo(disp8, CV_8U, 255.0/nod);
-	imshow("Disparidad fija", disp8);
+	imshow("Disparidad suavizada", disp8);
 }
 
+// Elección de los puntos característicos con Block Matching
 void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 					   vector<Point2f> &ptsL, vector<Point2f> &ptsR) 
 {
@@ -69,24 +71,23 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 
 	//imshow("disparity", dShow);
 
-	int sobelWinSz = 7;// algorithm parameters that can be modified
+	int sobelWinSz = 7;
 	Sobel(dCopy, dx, -1, 1, 0, sobelWinSz);
 	Sobel(dCopy, dy, -1, 0, 1, sobelWinSz);
 	magnitude(dx, dy, dEdge);
 	normalize(dEdge, dEdge, 0, 10, NORM_MINMAX);
 	//imshow("edge of disparity", dEdge);
-	//waitKey();
 
-	int filterSz[] = {50, 30};	// algorithm parameters that can be modified
-	float slope[] = {4, 8};	// algorithm parameters that can be modified
-	int keepBorder = 5;	// algorithm parameters that can be modified
+	int filterSz[] = {50, 30};
+	float slope[] = {4, 8};
+	int keepBorder = 5;
 	int cnt = 0;
 	double value;
-	float minValue = .003;	// algorithm parameters that can be modified
+	float minValue = .003;
 	Point2f selPt1, selPt2;
 	Mat_<float> dEdgeCopy1 = dEdge.clone();
 
-	// find the strongest edges, assign 1 or 2 key points near it
+	// Búsqueda de los bordes significativos y asigna 1 o 2 puntos característicos cerca a ellos
 	while (cnt < noe)
 	{
 
@@ -116,7 +117,6 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 			}
 
 			imshow("Disparidad",dShow);
-			//waitKey();
 
 			int left = min(filterSz[1], loc.x),
 				top = min(filterSz[0], loc.y),
@@ -124,8 +124,7 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 				bot = min(filterSz[0], dCopy.rows - loc.y - 1);
 			Mat sub = dEdgeCopy1(Range(loc.y - top, loc.y + bot + 1), Range(loc.x - left, loc.x + right + 1));
 			sub.setTo(Scalar(0));
-			//imshow("processing disparity edge", dEdgeCopy1);
-			//waitKey();
+
 		}
 		else
 		{
@@ -148,7 +147,6 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 			}
 
 			imshow("Disparidad",dShow);
-			//waitKey();
 
 			int left = min(filterSz[0], loc.x),
 				top = min(filterSz[1], loc.y),
@@ -156,19 +154,17 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 				bot = min(filterSz[1], dCopy.rows-loc.y - 1);
 			Mat sub = dEdgeCopy1(Range(loc.y - top, loc.y + bot + 1), Range(loc.x - left, loc.x + right + 1));
 			sub.setTo(Scalar(0));
-			//imshow("processing disparity edge", dEdgeCopy1);
-			//waitKey();
 		}
 	}
 
-	int filterSz0 = 6;// algorithm parameters that can be modified
-	keepBorder = 3;// algorithm parameters that can be modified
+	int filterSz0 = 6;
+	keepBorder = 3;
 	cnt = 0;
-	Mat_<float> dEdgeCopy2;// = dEdge.clone();
+	Mat_<float> dEdgeCopy2;
 	GaussianBlur(dEdge, dEdgeCopy2, Size(0, 0), 5);
 	char str[10];
 
-	// find the flat areas, assign 1 key point near it
+	// Búsqueda de las áreas planas, asignación de 1 punto característico cerca a ellas
 	while (cnt < nof)
 	{
 		Point loc;
@@ -196,23 +192,22 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 			bot = min(filterSz1, dCopy.rows-loc.y - 1);
 		Mat sub = dEdgeCopy2(Range(loc.y - top, loc.y + bot + 1), Range(loc.x - left, loc.x + right + 1));
 		sub.setTo(Scalar(10));
-		//imshow("processing disparity flat area", dEdgeCopy2);
 	}
 }
 
 void GetPairBM(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR) 
 {
 	Mat_<float> disp;
-	imshow("Imagen izquierda", imgL);
+	imshow("left image", imgL);
 
-	int numOfDisp = 80; // number of disparity, must be divisible by 16// algorithm parameters that can be modified
+	int numOfDisp = 80; // Número de disparidades, divisible entre 16
 	CalcDisparity(imgL, imgR, disp, numOfDisp);
 	Mat dispSave, dispS;
 	normalize(disp, dispSave, 0, 1, NORM_MINMAX);
 	dispSave.convertTo(dispSave, CV_8U, 255);
 	imwrite("disp.jpg", dispSave);
 
-	int numOfEgdePt = 80, numOfFlatPt = 50;	// algorithm parameters that can be modified
+	int numOfEgdePt = 80, numOfFlatPt = 50;
 	ChooseKeyPointsBM(disp, numOfDisp, numOfEgdePt, numOfFlatPt, ptsL, ptsR);
 	waitKey();
 }
