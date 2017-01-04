@@ -1,4 +1,5 @@
 #include "header.h"
+#include <time.h>
 
 // used for doing delaunay trianglation with opencv function
 bool isGoodTri(Vec3i &v, vector<Vec3i> & tri) 
