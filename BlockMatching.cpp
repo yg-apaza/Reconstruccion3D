@@ -46,12 +46,12 @@ void CalcDisparity(Mat &imgL, Mat &imgR, Mat_<float> &disp, int nod)
 	sgbm(imgL, imgR, dispTemp);
 	dispTemp.convertTo(disp, CV_32FC1, 1.0 / 16);
 	disp.convertTo(disp8, CV_8U, 255.0 / nod);
-	imshow("Origin disparity", disp8);
+	imshow("Disparidad de origen", disp8);
 	//waitKey();
 
 	FixDisparity(disp, nod);
 	disp.convertTo(disp8, CV_8U, 255.0/nod);
-	imshow("Fixed disparity", disp8);
+	imshow("Disparidad fija", disp8);
 }
 
 void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
@@ -61,7 +61,7 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 	dCopy = disp.colRange(Range(nod, disp.cols)).clone();
 	normalize(dCopy, dCopy, 0, 1, NORM_MINMAX);
 	
-	imshow("Disparity", dCopy);
+	imshow("Disparidad", dCopy);
 	Mat dShow(dCopy.size(), CV_32FC3);
 
 	if (dCopy.channels() == 1)
@@ -115,7 +115,7 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 				cnt++;
 			}
 
-			imshow("Disparity",dShow);
+			imshow("Disparidad",dShow);
 			//waitKey();
 
 			int left = min(filterSz[1], loc.x),
@@ -147,7 +147,7 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 				cnt++;
 			}
 
-			imshow("disparity",dShow);
+			imshow("Disparidad",dShow);
 			//waitKey();
 
 			int left = min(filterSz[0], loc.x),
@@ -185,7 +185,7 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 			cnt++;
 			snprintf(str, 10, "%.1f", disp(loc));
 			putText(dShow, str, Point(loc.x - nod + 3, loc.y), FONT_HERSHEY_SIMPLEX, .3, CV_RGB(255, 0, 255));
-			imshow("Disparity",dShow);
+			imshow("Disparidad",dShow);
 		}
 
 		loc.x -= nod;
@@ -203,7 +203,7 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 void GetPairBM(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR) 
 {
 	Mat_<float> disp;
-	imshow("left image", imgL);
+	imshow("Imagen izquierda", imgL);
 
 	int numOfDisp = 80; // number of disparity, must be divisible by 16// algorithm parameters that can be modified
 	CalcDisparity(imgL, imgR, disp, numOfDisp);

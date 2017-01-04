@@ -121,7 +121,7 @@ void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri)
 	
 	//RemoveDuplicate(tri);
 	char title[100];
-	snprintf(title, 100, "Delaunay: %d Triangles", tri.size());
+	snprintf(title, 100, "Delaunay: %d Triangulos", tri.size());
 	imshow(title, imgShow);
 	waitKey();
 }

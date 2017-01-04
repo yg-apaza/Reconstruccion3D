@@ -49,7 +49,7 @@ void GetPair(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR)
 
 	Mat HLR;
 	HLR = findHomography(Mat(ptsLtemp), Mat(ptsRtemp), CV_RANSAC, 3);
-	cout << "HomografÃ­a:" << endl << HLR << endl;
+	cout << "Homografía:" << endl << HLR << endl;
 	Mat ptsLt; 
 	perspectiveTransform(Mat(ptsLtemp), ptsLt, HLR);
 

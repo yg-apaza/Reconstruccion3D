@@ -40,7 +40,7 @@ GLuint Create3DTexture(Mat &img, vector<Vec3i> &tri,
 	GLuint tex = glGenLists(1);
 	int error = glGetError();
 	if (error != GL_NO_ERROR) 
-		cout << "An OpenGL error has occured: " << gluErrorString(error) << endl;
+		cout << "Un error OpenGL ha ocurrido: " << gluErrorString(error) << endl;
 	if (tex == 0) return 0;
 
 	Mat texImg;
@@ -107,7 +107,7 @@ void InitGl()
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(600, 600);
 	glutInitWindowPosition(100, 100);
-	glutCreateWindow("3D Reconstruction");
+	glutCreateWindow("Reconstruccion 3D");
 	//	glEnable(GL_POINT_SMOOTH);
 	//	glHint(GL_POINT_SMOOTH_HINT,GL_DONT_CARE);
 	//	glPointSize(2.5);
@@ -186,7 +186,7 @@ void displayGl()
 	glTranslatef(-0.08, .08, -0.2); 
 	glListBase(1000);
 	glRasterPos3f(0, 0, 0);
-	string help = "use arrow keys to rotate, mouse wheel to zoom";
+	string help = "Use las teclas de dirección para rotar, la rueda del raton para zoom";
 	glCallLists(help.size(), GL_UNSIGNED_BYTE, help.c_str());
 
 	glPopMatrix();

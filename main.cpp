@@ -22,11 +22,12 @@ int main(int argc, char* argv[])
 	Mat imgL = imread("view1.jpg"); 
 	Mat	imgR = imread("view5.jpg");
 	imshow("Imagen Izquierda", imgL);
+	imshow("Imagen Derecha", imgL);
 	waitKey(0);
 
 	if (!(imgL.data) || !(imgR.data))
 	{
-		cerr<<"can't load image!"<<endl;
+		cerr<<"No se pudo cargar imagen!"<<endl;
 		exit(1);
 	}
 
@@ -48,7 +49,7 @@ int main(int argc, char* argv[])
 	/* decide which points in the left image should be chosen               */
 	/* and calculate their corresponding points in the right image          */
 	/************************************************************************/
-	cout << "Calculating feature points ..." << endl;
+	cout << "Calculando puntos de características ..." << endl;
 	vector<Point2f> ptsL, ptsR;
 	vector<int> ptNum;
 	if (g_algo == FEATURE_POINT)
@@ -69,14 +70,14 @@ int main(int argc, char* argv[])
 	//float focalLenInMM = focalLenInPixel * MMperPixel;
 	focalLenInPixel *= scale;
 
-	cout << "Calculating 3D coordinates ..." << endl;
+	cout << "Calculando coordenadas 3D ..." << endl;
 	StereoTo3D(ptsL, ptsR, pts3D,  focalLenInPixel, baselineInMM,  imgL,
 				center3D, size3D);
 
 	/************************************************************************/
 	/* Delaunay triangulation                                               */
 	/************************************************************************/
-	cout << "Doing triangulation ..." << endl;
+	cout << "Haciendo triangulación ..." << endl;
 	size_t pairNum = ptsL.size();
 	vector<Vec3i> tri;
 	TriSubDiv(ptsL, imgL, tri);
@@ -87,7 +88,7 @@ int main(int argc, char* argv[])
 	glutInit(&argc, argv); // must be called first in a glut program
 	InitGl(); // must be called first in a glut program
 
-	cout << "Creating 3D texture ..." << endl;
+	cout << "Creando textura 3D ..." << endl;
 	GLuint tex = Create3DTexture(imgL, tri, ptsL, pts3D, center3D, size3D);
 	Show(tex, center3D, size3D);
 
