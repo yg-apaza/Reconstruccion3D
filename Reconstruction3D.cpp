@@ -160,7 +160,7 @@ void StereoTo3D( vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pt
 		}
 	}
 	
-	imshow("Back project", imgShow);
+	imshow("Coordenadas 3D obtenidas", imgShow);
 	waitKey();
 	
 	center3D.x = (minX + maxX) / 2;
