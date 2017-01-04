@@ -31,16 +31,18 @@ bool isGoodTri(Vec3i &v, vector<Vec3i> & tri)
 
 void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri) 
 {
-	CvSubdiv2D* subdiv; //The subdivision itself
-	CvMemStorage* storage = cvCreateMemStorage(0); //Storage for the Delaunay subdivsion
-	Rect rc = Rect(0, 0, img.cols, img.rows); //Our outer bounding box
+	CvSubdiv2D* subdiv; // Subdivision
+	// Almacenamiento para los puntos obtenidos por la subdivision de Delaunay
+	CvMemStorage* storage = cvCreateMemStorage(0);
+	// Rectangulo que abarca toda el area de subdivision
+	Rect rc = Rect(0, 0, img.cols, img.rows);
 	
 	subdiv = cvCreateSubdiv2D(CV_SEQ_KIND_SUBDIV2D, sizeof(*subdiv),
 							  sizeof(CvSubdiv2DPoint),
 							  sizeof(CvQuadEdge2D),
 							  storage);
 	
-	cvInitSubdivDelaunay2D( subdiv, rc ); //rect sets the bounds 
+	cvInitSubdivDelaunay2D( subdiv, rc );
 	
 	for (size_t i = 0; i < pts.size(); i++)
 	{
@@ -58,39 +60,31 @@ void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri)
 	Vec3i verticesIdx;
 	Mat imgShow = img.clone();
 	
-	srand((unsigned)time(NULL));   
+	srand((unsigned)time(NULL));
 	for(int i = 0; i < total; i++) 
 	{   
 		CvQuadEdge2D* edge = (CvQuadEdge2D*)(reader.ptr);   
-		
 		if(CV_IS_SET_ELEM(edge)) 
 		{
 			CvSubdiv2DEdge t = (CvSubdiv2DEdge)edge; 
 			int iPointNum = 3;
 			Scalar color = CV_RGB(rand()&255, rand()&255, rand()&255);
 			
-			//bool isNeg = false;
 			int j;
 			for(j = 0; j < iPointNum; j++ )
 			{
 				CvSubdiv2DPoint* pt = cvSubdiv2DEdgeOrg(t);
 				if(!pt) break;
 				buf[j] = pt->pt;
-				//if (pt->id == -1) isNeg = true;
 				verticesIdx[j] = pt->id;
 				t = cvSubdiv2DGetEdge(t, CV_NEXT_AROUND_LEFT);
 			}
 			if (j != iPointNum) continue;
 			if (isGoodTri(verticesIdx, tri))
 			{
-				//tri.push_back(verticesIdx);
 				polylines(imgShow, &pBuf, &iPointNum, 
 						  1, true, color,
 						  1, CV_AA, 0);
-				//printf("(%d, %d)-(%d, %d)-(%d, %d)\n", buf[0].x, buf[0].y, buf[1].x, buf[1].y, buf[2].x, buf[2].y);
-				//printf("%d\t%d\t%d\n", verticesIdx[0], verticesIdx[1], verticesIdx[2]);
-				//imshow("Delaunay", imgShow);
-				//waitKey();
 			}
 			
 			t = (CvSubdiv2DEdge)edge + 2;
@@ -103,38 +97,31 @@ void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri)
 				verticesIdx[j] = pt->id;
 				t = cvSubdiv2DGetEdge(t, CV_NEXT_AROUND_LEFT);
 			}   
-			if (j != iPointNum) continue;
+			if (j != iPointNum)
+				continue;
 			if (isGoodTri(verticesIdx, tri))
 			{
-				//tri.push_back(verticesIdx);
 				polylines( imgShow, &pBuf, &iPointNum, 
 						  1, true, color,
 						  1, CV_AA, 0);
-				//printf("(%d, %d)-(%d, %d)-(%d, %d)\n", buf[0].x, buf[0].y, buf[1].x, buf[1].y, buf[2].x, buf[2].y);
-				//printf("%d\t%d\t%d\n", verticesIdx[0], verticesIdx[1], verticesIdx[2]);
-				//imshow("Delaunay", imgShow);
-				//waitKey();
 			}
 		}
 		CV_NEXT_SEQ_ELEM( elem_size, reader );
 	}
 	
-	//RemoveDuplicate(tri);
 	char title[100];
-	snprintf(title, 100, "Delaunay: %d Triangulos", tri.size());
+	snprintf(title, 100, "Delaunay: %d triangulos", tri.size());
 	imshow(title, imgShow);
 	waitKey();
 }
 
-// calculate 3d coordinates.
-// for rectified stereos: pointLeft.y == pointRight.y
-// the origin for both image is the top-left corner of the left image.
-// the x-axis points to the right and the y-axis points downward on the image.
-// the origin for the 3d real world is the optical center of the left camera
-// object -> optical center -> image, the z value decreases.
+// Calcula las coordenadas 3D
+// para los puntos rectificados pointLeft.y == pointRight.y
+// El origen (0,0) para ambas imágenes es la esquina superior-izquierda de la imagen izquierda
 void StereoTo3D( vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pts3D,
 				float focalLenInPixel, float baselineInMM, Mat img,
-				Point3f &center3D, Vec3f &size3D) // output variable, the center coordinate and the size of the object described by pts3D
+				Point3f &center3D, Vec3f &size3D)
+	// Salida: La coordinada del centro de la imagen, y el numero de elementos de pts3D
 {
 	vector<Point2f>::iterator iterL = ptsL.begin(), iterR = ptsR.begin();
 	
@@ -152,13 +139,10 @@ void StereoTo3D( vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pt
 	for (; iterL != ptsL.end(); iterL++, iterR++)
 	{
 		xl = iterL->x;
-		xr = iterR->x; // need not add baseline
+		xr = iterR->x;
 		ylr = (iterL->y + iterR->y) / 2;
-		
-		//if (yl-yr>5 || yr-yl>5) // may be wrong correspondence, discard. But vector can't be changed during iteration
-		//{}
-		
-		pt3D.z = -focalLenInPixel * baselineInMM / (xl - xr); // xl should be larger than xr, if xl is shot by the left camera
+		// xl debe ser mayor a xr, si xl es obtenido por la camara izquierda
+		pt3D.z = -focalLenInPixel * baselineInMM / (xl - xr);
 		pt3D.y = -(-ylr + imgH / 2) * pt3D.z / focalLenInPixel;
 		pt3D.x = (imgW / 2 - xl) * pt3D.z / focalLenInPixel;
 		
