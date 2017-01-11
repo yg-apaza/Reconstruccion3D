@@ -1,28 +1,26 @@
-/************************************************************************************/
-/* The 2 stereo images should have parallel principal axis.							*/
-/* I cannot guarantee the reconstruct effect, especially when the images are shot	*/
-/*	with inexact parallel principal axis.											*/
-/* The 3D reconstruct algorithm still needs improvements, for there are so many		*/
-/*	glitches.																		*/
-/* Yan Ke, THUEE, xjed09@gmail.com, 201106											*/
-/************************************************************************************/
+/******************************************************************************/
+/* Las imágenes utilizadas tienen el eje principal paralelo.				  */
+/******************************************************************************/
 
 #include "header.h"
 
+//Algoritmos para la selección de puntos y reconstrucción 3D
 namespace reconstruction
 {
 	enum Algorithm {FEATURE_POINT, BLOCK_MATCHING};
-	Algorithm g_algo = FEATURE_POINT;//BLOCK_MATCHING; // 2 algorithms to select corresponding points and reconstruct 3D scene
+	Algorithm g_algo = FEATURE_POINT;
+	//Algorithm g_algo = BLOCK_MATCHING;
 };
 
 using namespace reconstruction;
 
 int main(int argc, char* argv[])
 {
-	Mat imgL = imread("view1.jpg"); 
-	Mat	imgR = imread("view5.jpg");
+	//Carga de las imágenes
+	Mat imgL = imread("Images/view1.jpg"); 
+	Mat	imgR = imread("Images/view5.jpg");
 	imshow("Imagen Izquierda", imgL);
-	imshow("Imagen Derecha", imgL);
+	imshow("Imagen Derecha", imgR);
 	waitKey(0);
 
 	if (!(imgL.data) || !(imgR.data))
@@ -32,9 +30,9 @@ int main(int argc, char* argv[])
 	}
 
 	/************************************************************************/
-	/*                                                                      */
+	/* Redimensión de las imágenes                                          */
 	/************************************************************************/
-	float stdWidth = 800, resizeScale = 1;//stdWidth can change
+	float stdWidth = 800, resizeScale = 1;
 	if (imgL.cols > stdWidth * 1.2)
 	{
 		resizeScale = stdWidth / imgL.cols;
@@ -46,10 +44,10 @@ int main(int argc, char* argv[])
 	}
 
 	/************************************************************************/
-	/* decide which points in the left image should be chosen               */
-	/* and calculate their corresponding points in the right image          */
+	/* Elección de los puntos característicos en la imagen izquierda        */
+	/* Cálculo de los puntos correspondientes en la imagen derecha           */
 	/************************************************************************/
-	cout << "Calculando puntos de características ..." << endl;
+	cout << "Calculando puntos caracteristicos ..." << endl;
 	vector<Point2f> ptsL, ptsR;
 	vector<int> ptNum;
 	if (g_algo == FEATURE_POINT)
@@ -58,35 +56,34 @@ int main(int argc, char* argv[])
 		GetPairBM(imgL, imgR, ptsL, ptsR);
 
 	/************************************************************************/
-	/* calculate 3D coordinates                                             */
+	/* Cálculo de las coordenadas 3D                                        */
 	/************************************************************************/
 	vector<Point3f> pts3D;
 	float focalLenInPixel = 3740 * resizeScale, baselineInMM = 160;
 	Point3f center3D;
 	Vec3f size3D;
-	float scale = .2; // scale the z coordinate so that it won't be too large spreaded
-	//float imgHinMM = 400, // approximate real height of the scene in picture, useless
+	float scale = .2; // Escala de la coordenada z para concentrar el espacio
+	//float imgHinMM = 400, // Altura real aproximada de la escena en la imagen
 	//float MMperPixel = imgHinMM / imgL.rows;
 	//float focalLenInMM = focalLenInPixel * MMperPixel;
 	focalLenInPixel *= scale;
 
 	cout << "Calculando coordenadas 3D ..." << endl;
-	StereoTo3D(ptsL, ptsR, pts3D,  focalLenInPixel, baselineInMM,  imgL,
-				center3D, size3D);
+	StereoTo3D(ptsL, ptsR, pts3D, focalLenInPixel, baselineInMM, imgL, center3D, size3D);
 
 	/************************************************************************/
-	/* Delaunay triangulation                                               */
+	/* Triangulación de Delaunay                                            */
 	/************************************************************************/
-	cout << "Haciendo triangulación ..." << endl;
+	cout << "Ejecutando triangulacion ..." << endl;
 	size_t pairNum = ptsL.size();
 	vector<Vec3i> tri;
 	TriSubDiv(ptsL, imgL, tri);
 
 	/************************************************************************/
-	/* Draw 3D scene using OpenGL                                           */
+	/* Dibujo de la escena 3D mediante OpenGL                               */
 	/************************************************************************/
-	glutInit(&argc, argv); // must be called first in a glut program
-	InitGl(); // must be called first in a glut program
+	glutInit(&argc, argv); // Inicializa la librería GLUT
+	InitGl(); //Inicializa las funciones de openGL
 
 	cout << "Creando textura 3D ..." << endl;
 	GLuint tex = Create3DTexture(imgL, tri, ptsL, pts3D, center3D, size3D);

@@ -1,7 +1,7 @@
 #include "header.h"
 #include <time.h>
 
-// used for doing delaunay trianglation with opencv function
+// Triangulación de Delaunay
 bool isGoodTri(Vec3i &v, vector<Vec3i> & tri) 
 {
 	int a = v[0], b = v[1], c = v[2];
@@ -121,7 +121,7 @@ void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri)
 void StereoTo3D( vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pts3D,
 				float focalLenInPixel, float baselineInMM, Mat img,
 				Point3f &center3D, Vec3f &size3D)
-	// Salida: La coordinada del centro de la imagen, y el numero de elementos de pts3D
+// Salida: La coordenada del centro de la imagen, y el numero de elementos de pts3D
 {
 	vector<Point2f>::iterator iterL = ptsL.begin(), iterR = ptsR.begin();
 	
@@ -141,7 +141,7 @@ void StereoTo3D( vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pt
 		xl = iterL->x;
 		xr = iterR->x;
 		ylr = (iterL->y + iterR->y) / 2;
-		// xl debe ser mayor a xr, si xl es obtenido por la camara izquierda
+		// xl debe ser mayor a xr si proviene de la camara izquierda
 		pt3D.z = -focalLenInPixel * baselineInMM / (xl - xr);
 		pt3D.y = -(-ylr + imgH / 2) * pt3D.z / focalLenInPixel;
 		pt3D.x = (imgW / 2 - xl) * pt3D.z / focalLenInPixel;

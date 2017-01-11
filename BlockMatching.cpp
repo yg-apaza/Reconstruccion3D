@@ -68,15 +68,14 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 
 	if (dCopy.channels() == 1)
 	cvtColor(dCopy, dShow, CV_GRAY2RGB);
-
-	//imshow("disparity", dShow);
+	//imshow("Disparidad", dShow);
 
 	int sobelWinSz = 7;
 	Sobel(dCopy, dx, -1, 1, 0, sobelWinSz);
 	Sobel(dCopy, dy, -1, 0, 1, sobelWinSz);
 	magnitude(dx, dy, dEdge);
 	normalize(dEdge, dEdge, 0, 10, NORM_MINMAX);
-	//imshow("edge of disparity", dEdge);
+	//imshow("Borde de la disparidad", dEdge);
 
 	int filterSz[] = {50, 30};
 	float slope[] = {4, 8};
@@ -198,7 +197,7 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 void GetPairBM(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR) 
 {
 	Mat_<float> disp;
-	imshow("left image", imgL);
+	imshow("Imagen izquierda", imgL);
 
 	int numOfDisp = 80; // Número de disparidades, divisible entre 16
 	CalcDisparity(imgL, imgR, disp, numOfDisp);

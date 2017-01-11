@@ -1,24 +1,24 @@
 #include "header.h"
 
-// SIFT es 50 veces mÃ¡s lenta pero obtiene 7 veces mÃ¡s puntos igualados
-// FAST detecta mÃ¡s puntos que SURF
-// STAR / MSER generan muy pocos puntos clave
+// SIFT (Scale-Invariant feature transform) es 50 veces más lento pero obtiene 7 veces más puntos igualados
+// FAST (Features from accelerated segment test) detecta más puntos que SURF
+// STAR/MSER generan pocos puntos característicos
 
-#define DETECTOR_TYPE	"FAST" // FAST, SIFT, SURF, STAR, MSER, GFTT, HARRIS ... ver la funciÃ³n crear
-#define DESCRIPTOR_TYPE	"SIFT" // SURF, SIFT, BRIEF, ... BRIEF parece tener un error
-#define MATCHER_TYPE	"FlannBased" // BruteForce, FlannBased, BruteForce-L1,...
+#define DETECTOR_TYPE	"FAST" // FAST, SIFT, SURF, STAR, MSER, GFTT, HARRIS
+#define DESCRIPTOR_TYPE	"SIFT" // SURF, SIFT, BRIEF 
+#define MATCHER_TYPE	"FlannBased" // BruteForce, FlannBased, BruteForce-L1
 
 #define MAXM_FILTER_TH	.8	// Umbral utilizado en GetPair
 #define HOMO_FILTER_TH	60	// Umbral utilizado en GetPair
 #define NEAR_FILTER_TH	40	// Los puntos diff deben tener una distancia superior a NEAR_FILTER_TH
 
-// Elegir los puntos correspondientes en las imÃ¡genes estÃ©reo para la reconstrucciÃ³n 3d
+// Elegir los puntos correspondientes en las imágenes estéreo para la reconstrucción 3D
 void GetPair(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR) 
 {
 	cv::initModule_nonfree();
 	Mat descriptorsL, descriptorsR;
 	double tt = (double) getTickCount();
-	Ptr<FeatureDetector> detector = FeatureDetector::create(DETECTOR_TYPE); // Modo de fÃ¡brica
+	Ptr<FeatureDetector> detector = FeatureDetector::create(DETECTOR_TYPE); // Modo de fábrica
 	vector<KeyPoint> keypointsL, keypointsR; 
 	detector->detect(imgL, keypointsL);
 	detector->detect(imgR, keypointsR);
@@ -49,7 +49,7 @@ void GetPair(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR)
 
 	Mat HLR;
 	HLR = findHomography(Mat(ptsLtemp), Mat(ptsRtemp), CV_RANSAC, 3);
-	cout << "Homografía:" << endl << HLR << endl;
+	cout << "Homografia:" << endl << HLR << endl;
 	Mat ptsLt; 
 	perspectiveTransform(Mat(ptsLtemp), ptsLt, HLR);
 
@@ -60,7 +60,7 @@ void GetPair(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR)
 		Point2f prjPtR = ptsLt.at<Point2f>((int)i1, 0); // prjx = ptsLt.at<float>((int)i1,0), prjy = ptsLt.at<float>((int)i1,1);
 
 		if(abs(ptsRtemp[i1].x - prjPtR.x) < HOMO_FILTER_TH &&
-			abs(ptsRtemp[i1].y - prjPtR.y) < 2) // La restricciÃ³n es mÃ¡s estricta
+			abs(ptsRtemp[i1].y - prjPtR.y) < 2) // Restricción más estricta
 		{
 			vector<Point2f>::iterator iter = ptsL.begin();
 			for (; iter != ptsL.end(); iter++)

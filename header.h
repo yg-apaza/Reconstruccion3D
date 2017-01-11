@@ -10,15 +10,14 @@ using namespace std;
 
 /* Reconstruction 3D */
 void StereoTo3D(vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pts3D, 
-				float focalLenInPixel, float baselineInMM, 
-				Mat img, Point3f &center3D, Vec3f &size3D);
+				float focalLenInPixel, float baselineInMM, Mat img, Point3f &center3D, Vec3f &size3D);
 void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri);
 
-/* Algorithms */
+/* Algoritmos*/
 void GetPair(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR); // FEATURE_POINT
 void GetPairBM(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR); // BLOCK_MATCHING
 
-/* OpenGL functions*/
+/* Funciones de OpenGL*/
 void InitGl();
 void Init_lightGl();
 void displayGl();
