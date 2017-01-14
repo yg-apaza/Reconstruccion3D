@@ -6,20 +6,31 @@ void FixDisparity(Mat_<float> & disp, int numberOfDisparities)
 	Mat_<float> disp1;
 	float lastPixel = 10;
 	float minDisparity = 30; // Número mínimo de disparidades
+	
+	//Recorrido del mapa de disparidad rellenando los vacios
 	for (int i = 0; i < disp.rows; i++)
 	{
 		for (int j = numberOfDisparities; j < disp.cols; j++)
 		{
-			if (disp(i, j) <= minDisparity) disp(i, j) = lastPixel;
-			else lastPixel = disp(i, j);
+			//Se llena con un valor por defecto
+			if (disp(i, j) <= minDisparity) 
+				disp(i, j) = lastPixel;
+			//Actualizacion del valor
+			else 
+				lastPixel = disp(i, j);
 		}
 	}
-	int an = 4;
-	copyMakeBorder(disp, disp1, an, an, an, an, BORDER_REPLICATE);
-	Mat element = getStructuringElement(MORPH_ELLIPSE, Size(an * 2 + 1, an * 2 + 1));
-	morphologyEx(disp1, disp1, CV_MOP_OPEN, element);
-	morphologyEx(disp1, disp1, CV_MOP_CLOSE, element);
-	disp = disp1(Range(an, disp.rows - an), Range(an, disp.cols - an)).clone();
+	int border = 4;
+	//Ampliación del mapa de disparidad
+	copyMakeBorder(disp, disp1, border, border, border, border, BORDER_REPLICATE);
+	Mat element = getStructuringElement(MORPH_ELLIPSE, Size(border * 2 + 1, border * 2 + 1));
+	
+	//Transformaciones de morfología
+	morphologyEx(disp1, disp1, CV_MOP_OPEN, element); //Eliminar pequeñas regiones claras
+	morphologyEx(disp1, disp1, CV_MOP_CLOSE, element); //Eliminar pequeñas regiones oscuras
+	
+	//Recorte del mapa de disparidad
+	disp = disp1(Range(border, disp.rows - border), Range(border, disp.cols - border)).clone();
 }
 
 // Calcula el mapa de disparidades mediante el algoritmo semi-global block matching
@@ -41,11 +52,12 @@ void CalcDisparity(Mat &imgL, Mat &imgR, Mat_<float> &disp, int nDisp)
 	sgbm.disp12MaxDiff = 1;
 	sgbm.fullDP = false;
 
-	
 	Mat dispTemp, disp8;
 	sgbm(imgL, imgR, dispTemp);
+	
 	//Conversión a una matriz flotante de 32-bit de 1 canal
 	dispTemp.convertTo(disp, CV_32FC1, 1.0 / 16);
+	
 	//Conversión a una matriz unsigned de 8-bits (escala de grises)
 	disp.convertTo(disp8, CV_8U, 255.0 / nDisp);
 	imshow("Disparidad original", disp8);
@@ -57,19 +69,17 @@ void CalcDisparity(Mat &imgL, Mat &imgR, Mat_<float> &disp, int nDisp)
 }
 
 // Elección de los puntos característicos con Block Matching
-void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
+void ChooseKeyPointsBM(Mat_<float> &disp, int nDisp, int nEdgePt, int nFlatPt,
 					   vector<Point2f> &ptsL, vector<Point2f> &ptsR) 
 {
 	Mat_<float>  dCopy, dx, dy, dEdge;
-	dCopy = disp.colRange(Range(nod, disp.cols)).clone();
+	dCopy = disp.colRange(Range(nDisp, disp.cols)).clone();
 	normalize(dCopy, dCopy, 0, 1, NORM_MINMAX);
+	//imshow("Disparidad", dCopy);
 	
-	imshow("Disparidad", dCopy);
 	Mat dShow(dCopy.size(), CV_32FC3);
-
 	if (dCopy.channels() == 1)
-	cvtColor(dCopy, dShow, CV_GRAY2RGB);
-	//imshow("Disparidad", dShow);
+		cvtColor(dCopy, dShow, CV_GRAY2RGB);
 
 	int sobelWinSz = 7;
 	Sobel(dCopy, dx, -1, 1, 0, sobelWinSz);
@@ -88,9 +98,8 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 	Mat_<float> dEdgeCopy1 = dEdge.clone();
 
 	// Búsqueda de los bordes significativos y asigna 1 o 2 puntos característicos cerca a ellos
-	while (cnt < noe)
+	while (cnt < nEdgePt)
 	{
-
 		Point loc;
 		minMaxLoc(dEdgeCopy1, NULL, &value, NULL, &loc);
 		if (value < minValue) break;
@@ -99,54 +108,49 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 		if (abs(dx1) >= abs(dy1))
 		{
 			selPt1.y = selPt2.y = loc.y;
-			selPt1.x = loc.x - (dx1 > 0 ? slope[1] : slope[0]) + nod;
-			selPt2.x = loc.x + (dx1 > 0 ? slope[0] : slope[1]) + nod;
-			if (selPt1.x > keepBorder+nod)
+			selPt1.x = loc.x - (dx1 > 0 ? slope[1] : slope[0]) + nDisp;
+			selPt2.x = loc.x + (dx1 > 0 ? slope[0] : slope[1]) + nDisp;
+			if (selPt1.x > keepBorder+nDisp)
 			{
 				ptsL.push_back(selPt1);
 				ptsR.push_back(selPt1 - Point2f(disp(selPt1), 0));
-				circle(dShow, selPt1-Point2f(nod, 0), 2, CV_RGB(255, 0, 0), 2);
+				circle(dShow, selPt1-Point2f(nDisp, 0), 2, CV_RGB(255, 0, 0), 2);
 				cnt++;
 			}
 			if (selPt2.x < disp.cols - keepBorder)
 			{
 				ptsL.push_back(selPt2);
 				ptsR.push_back(selPt2 - Point2f(disp(selPt2), 0));
-				circle(dShow, selPt2-Point2f(nod, 0), 2, CV_RGB(0, 255, 0), 2);
+				circle(dShow, selPt2-Point2f(nDisp, 0), 2, CV_RGB(0, 255, 0), 2);
 				cnt++;
 			}
-
-			imshow("Disparidad",dShow);
-
+			
 			int left = min(filterSz[1], loc.x),
 				top = min(filterSz[0], loc.y),
 				right = min(filterSz[1], dCopy.cols - loc.x - 1),
 				bot = min(filterSz[0], dCopy.rows - loc.y - 1);
 			Mat sub = dEdgeCopy1(Range(loc.y - top, loc.y + bot + 1), Range(loc.x - left, loc.x + right + 1));
 			sub.setTo(Scalar(0));
-
 		}
 		else
 		{
-			selPt1.x = selPt2.x = loc.x+nod;
+			selPt1.x = selPt2.x = loc.x+nDisp;
 			selPt1.y = loc.y - (dy1 > 0 ? slope[1] : slope[0]);
 			selPt2.y = loc.y + (dy1 > 0 ? slope[0] : slope[1]);
 			if (selPt1.y > keepBorder)
 			{
 				ptsL.push_back(selPt1);
 				ptsR.push_back(selPt1 - Point2f(disp(selPt1), 0));
-				circle(dShow, selPt1-Point2f(nod, 0), 2, CV_RGB(255, 255, 0), 2);
+				circle(dShow, selPt1-Point2f(nDisp, 0), 2, CV_RGB(255, 255, 0), 2);
 				cnt++;
 			}
 			if (selPt2.y < disp.rows-keepBorder)
 			{
 				ptsL.push_back(selPt2);
 				ptsR.push_back(selPt2 - Point2f(disp(selPt2), 0));
-				circle(dShow, selPt2-Point2f(nod, 0), 2, CV_RGB(0, 255, 255), 2);
+				circle(dShow, selPt2-Point2f(nDisp, 0), 2, CV_RGB(0, 255, 255), 2);
 				cnt++;
 			}
-
-			imshow("Disparidad",dShow);
 
 			int left = min(filterSz[0], loc.x),
 				top = min(filterSz[1], loc.y),
@@ -156,7 +160,7 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 			sub.setTo(Scalar(0));
 		}
 	}
-
+	imshow("Puntos característicos en bordes",dShow);
 	int filterSz0 = 6;
 	keepBorder = 3;
 	cnt = 0;
@@ -165,26 +169,25 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 	char str[10];
 
 	// Búsqueda de las áreas planas, asignación de 1 punto característico cerca a ellas
-	while (cnt < nof)
+	while (cnt < nFlatPt)
 	{
 		Point loc;
 		minMaxLoc(dEdgeCopy2, &value, NULL, &loc, NULL);
 		if (value == 10) break;
 
-		loc.x += nod;
-		if (loc.x > keepBorder + nod && loc.y > keepBorder &&
+		loc.x += nDisp;
+		if (loc.x > keepBorder + nDisp && loc.y > keepBorder &&
 			loc.x < disp.cols && loc.y < disp.rows)
 		{
 			ptsL.push_back(loc);
 			ptsR.push_back(Point2f(loc.x, loc.y) - Point2f(disp(loc), 0));
-			circle(dShow, Point2f(loc.x, loc.y) - Point2f(nod, 0), 2, CV_RGB(255, 0, 255), 2);
+			circle(dShow, Point2f(loc.x, loc.y) - Point2f(nDisp, 0), 2, CV_RGB(255, 0, 255), 2);
 			cnt++;
 			snprintf(str, 10, "%.1f", disp(loc));
-			putText(dShow, str, Point(loc.x - nod + 3, loc.y), FONT_HERSHEY_SIMPLEX, .3, CV_RGB(255, 0, 255));
-			imshow("Disparidad",dShow);
+			putText(dShow, str, Point(loc.x - nDisp + 3, loc.y), FONT_HERSHEY_SIMPLEX, .3, CV_RGB(255, 0, 255));
 		}
 
-		loc.x -= nod;
+		loc.x -= nDisp;
 		int filterSz1 = (10 - value * 3) * filterSz0;
 		int left = min(filterSz1, loc.x),
 			top = min(filterSz1, loc.y),
@@ -193,19 +196,27 @@ void ChooseKeyPointsBM(Mat_<float> &disp, int nod, int noe, int nof,
 		Mat sub = dEdgeCopy2(Range(loc.y - top, loc.y + bot + 1), Range(loc.x - left, loc.x + right + 1));
 		sub.setTo(Scalar(10));
 	}
+	imshow("Puntos Característicos en planos",dShow);
+}
+
+void SaveDisparity(Mat_<float> &disp){
+	Mat dispSave;
+	
+	//Normalización entre 0 y 1
+	normalize(disp, dispSave, 0, 1, NORM_MINMAX);
+	
+	//Conversión a escala de grises
+	dispSave.convertTo(dispSave, CV_8U, 255);
+	imwrite("disp.jpg", dispSave);
 }
 
 void GetPairBM(Mat &imgL, Mat &imgR, vector<Point2f> &ptsL, vector<Point2f> &ptsR) 
 {
 	Mat_<float> disp;
-	imshow("Imagen izquierda", imgL);
 
 	int numOfDisp = 80; // Número de disparidades, divisible entre 16
 	CalcDisparity(imgL, imgR, disp, numOfDisp);
-	Mat dispSave, dispS;
-	normalize(disp, dispSave, 0, 1, NORM_MINMAX);
-	dispSave.convertTo(dispSave, CV_8U, 255);
-	imwrite("disp.jpg", dispSave);
+	SaveDisparity(disp);
 
 	int numOfEgdePt = 80, numOfFlatPt = 50;
 	ChooseKeyPointsBM(disp, numOfDisp, numOfEgdePt, numOfFlatPt, ptsL, ptsR);
