@@ -1,6 +1,6 @@
 #include "header.h"
 
-// Suaviza las fallas en el mapa de disparidad
+// Suaviza las distorciones del mapa de disparidad
 void FixDisparity(Mat_<float> & disp, int numberOfDisparities) 
 {
 	Mat_<float> disp1;
@@ -22,36 +22,37 @@ void FixDisparity(Mat_<float> & disp, int numberOfDisparities)
 	disp = disp1(Range(an, disp.rows - an), Range(an, disp.cols - an)).clone();
 }
 
-// Calcula el mapa de disparidades
-void CalcDisparity(Mat &imgL, Mat &imgR, Mat_<float> &disp, int nod) 
+// Calcula el mapa de disparidades mediante el algoritmo semi-global block matching
+void CalcDisparity(Mat &imgL, Mat &imgR, Mat_<float> &disp, int nDisp) 
 {
-	// Algoritmos de block matching disponibles
-	enum {STEREO_BM = 0, STEREO_SGBM = 1, STEREO_HH = 2};
-	int alg = STEREO_SGBM;
-
 	StereoSGBM sgbm;
-	int cn = imgR.channels();
+	int nChannels = imgR.channels();
 
+	//Parámetros iniciales
 	sgbm.SADWindowSize = 3;
-	sgbm.numberOfDisparities = nod;
+	sgbm.numberOfDisparities = nDisp;
 	sgbm.preFilterCap = 63;
-	sgbm.P1 = 8 * cn * sgbm.SADWindowSize * sgbm.SADWindowSize;
-	sgbm.P2 = 32 * cn * sgbm.SADWindowSize * sgbm.SADWindowSize;
+	sgbm.P1 = 8 * nChannels * sgbm.SADWindowSize * sgbm.SADWindowSize;
+	sgbm.P2 = 32 * nChannels * sgbm.SADWindowSize * sgbm.SADWindowSize;
 	sgbm.minDisparity = 0;
 	sgbm.uniquenessRatio = 10;
 	sgbm.speckleWindowSize = 100;
 	sgbm.speckleRange = 32;
 	sgbm.disp12MaxDiff = 1;
-	sgbm.fullDP = alg == STEREO_HH;
+	sgbm.fullDP = false;
 
+	
 	Mat dispTemp, disp8;
 	sgbm(imgL, imgR, dispTemp);
+	//Conversión a una matriz flotante de 32-bit de 1 canal
 	dispTemp.convertTo(disp, CV_32FC1, 1.0 / 16);
-	disp.convertTo(disp8, CV_8U, 255.0 / nod);
+	//Conversión a una matriz unsigned de 8-bits (escala de grises)
+	disp.convertTo(disp8, CV_8U, 255.0 / nDisp);
 	imshow("Disparidad original", disp8);
 
-	FixDisparity(disp, nod);
-	disp.convertTo(disp8, CV_8U, 255.0/nod);
+	//Suavizar las distorciones
+	FixDisparity(disp, nDisp);
+	disp.convertTo(disp8, CV_8U, 255.0/nDisp);
 	imshow("Disparidad suavizada", disp8);
 }
 
