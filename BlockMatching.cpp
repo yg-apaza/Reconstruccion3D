@@ -5,7 +5,7 @@ void FixDisparity(Mat_<float> & disp, int numberOfDisparities)
 {
 	Mat_<float> disp1;
 	float lastPixel = 10;
-	float minDisparity = 23; // Número mínimo de disparidades
+	float minDisparity = 30; // Número mínimo de disparidades
 	for (int i = 0; i < disp.rows; i++)
 	{
 		for (int j = numberOfDisparities; j < disp.cols; j++)

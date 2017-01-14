@@ -13,33 +13,54 @@ version_required=20140318
 custom_tabs=0
 tab_use_spaces=0
 explorer_path=
-current_source=header.h
+current_source=MyMainWindow.cpp
 path_char=\
 [source]
-path=main.cpp
-cursor=25:0
-open=true
+path=wxfbWindows.cpp
+cursor=86:1
 [source]
 path=FeaturePoint.cpp
-cursor=19:3
+cursor=9:0
 open=true
 [source]
 path=BlockMatching.cpp
-cursor=57:29
+cursor=7:24
 open=true
 [source]
 path=GLFuncs.cpp
-cursor=42:6
+cursor=18:21
 [source]
 path=Reconstruction3D.cpp
-cursor=0:0
+cursor=167:27
+open=true
+[source]
+path=Application.cpp
+cursor=13:25
+[source]
+path=MyMainWindow.cpp
+cursor=87:74
 open=true
 [header]
 path=header.h
+cursor=12:90
+[header]
+path=Application.h
 cursor=0:0
+[header]
+path=MyMainWindow.h
+cursor=14:6
 open=true
+[header]
+path=wxfbWindows.h
+cursor=0:0
 [other]
 path=README.md
+cursor=0:0
+[other]
+path=manifest.xml
+cursor=0:0
+[other]
+path=wxfbWindows.fbp
 cursor=0:0
 [config]
 name=Debug_Linux
@@ -115,7 +136,7 @@ console_program=1
 dont_generate_exe=0
 [config]
 name=Debug_Win32
-toolchain=gcc-mingw32
+toolchain=gcc5-mingw32
 toolchain_argument_0=${DEFAULT}
 toolchain_argument_1=${DEFAULT}
 toolchain_argument_2=${DEFAULT}
@@ -131,7 +152,7 @@ wait_for_key=2
 temp_folder=debug.w32
 output_file=debug.w32\Reconstruction3D.exe
 icon_file=
-manifest_file=
+manifest_file=manifest.xml
 compiling_extra=
 macros=FREEGLUT_STATIC
 warnings_level=1
@@ -142,10 +163,10 @@ std_cpp=
 debug_level=2
 optimization_level=0
 enable_lto=0
-headers_dirs=${MINGW_DIR}\OpenCV2\include ${MINGW_DIR}\OpenGl\include
+headers_dirs=${MINGW_DIR}\OpenCV2\include ${MINGW_DIR}\OpenGl\include ${MINGW_DIR}\wx\include
 linking_extra=
-libraries_dirs=${MINGW_DIR}\OpenCV2\lib ${MINGW_DIR}\OpenGl\lib
-libraries=opencv_calib3d2410 opencv_contrib2410 opencv_core2410 opencv_features2d2410 opencv_flann2410 opencv_gpu2410 opencv_haartraining_engine opencv_highgui2410 opencv_imgproc2410 opencv_legacy2410 opencv_ml2410 opencv_nonfree2410 opencv_objdetect2410 opencv_ocl2410 opencv_photo2410 opencv_stitching2410 opencv_superres2410 opencv_ts2410 opencv_video2410 opencv_videostab2410 freeglut_static glu32 opengl32 winmm gdi32
+libraries_dirs=${MINGW_DIR}\OpenCV2\lib ${MINGW_DIR}\OpenGl\lib ${MINGW_DIR}\wx\lib
+libraries=opencv_calib3d2410 opencv_contrib2410 opencv_core2410 opencv_features2d2410 opencv_flann2410 opencv_gpu2410 opencv_haartraining_engine opencv_highgui2410 opencv_imgproc2410 opencv_legacy2410 opencv_ml2410 opencv_nonfree2410 opencv_objdetect2410 opencv_ocl2410 opencv_photo2410 opencv_stitching2410 opencv_superres2410 opencv_ts2410 opencv_video2410 opencv_videostab2410 freeglut_static glu32 opengl32 wxmsw28_html  wxmsw28_core wxbase28_net wxbase28 wxmsw28_adv wxtiff wxjpeg wxpng wxzlib wxregex wxexpat shell32 comctl32 ole32 oleaut32 uuid rpcrt4 advapi32 wsock32 odbc32 kernel32 user32 gdi32 comdlg32 winspool winmm gdi32  
 strip_executable=0
 console_program=1
 dont_generate_exe=0
@@ -185,5 +206,11 @@ libraries=freeglut_static, glu32, opengl32, winmm, gdi32
 strip_executable=0
 console_program=1
 dont_generate_exe=0
+[wxfb]
+autoupdate_projects=1
+update_class_list=1
+update_methods=1
+dont_show_base_classes_in_goto=1
+set_wxfb_sources_as_readonly=1
 [custom_tools]
 [end]

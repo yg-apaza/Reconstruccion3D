@@ -109,7 +109,7 @@ void Init_lightGl()
 	glEnable(GL_NORMALIZE);
 }
 
-void Show(GLuint tex, Point3f center3D, Vec3i size3D) 
+void ShowW(GLuint tex, Point3f center3D, Vec3i size3D) 
 {
 	g_tz = 2; // Ajustar posicion de la camara
 	g_rx = 90;

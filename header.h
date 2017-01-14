@@ -31,4 +31,4 @@ void MapTexTri(Mat & texImg, Point2f pt2D, Point3f pt3D);
 GLuint Create3DTexture(Mat &img, vector<Vec3i> &tri, 
 					   vector<Point2f> pts2DTex, vector<Point3f> &pts3D, 
 					   Point3f center3D, Vec3f size3D);
-void Show(GLuint tex, Point3f center3D, Vec3i size3D);
+void ShowW(GLuint tex, Point3f center3D, Vec3i size3D);
