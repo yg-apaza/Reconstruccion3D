@@ -12,12 +12,11 @@ version_required=20140318
 custom_tabs=0
 tab_use_spaces=0
 explorer_path=
-current_source=MyMainWindow.cpp
+current_source=README.md
 path_char=/
 [source]
 path=wxfbWindows.cpp
 cursor=0:0
-open=true
 [source]
 path=FeaturePoint.cpp
 cursor=9:0
@@ -36,7 +35,6 @@ cursor=14:1
 [source]
 path=MyMainWindow.cpp
 cursor=55:18
-open=true
 [header]
 path=header.h
 cursor=12:90
@@ -51,7 +49,7 @@ path=wxfbWindows.h
 cursor=9:0
 [other]
 path=README.md
-cursor=21:174
+cursor=0:15
 open=true
 [other]
 path=manifest.xml
