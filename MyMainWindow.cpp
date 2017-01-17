@@ -81,7 +81,6 @@ void MyMainWindow::execute( wxCommandEvent& event )  {
 	/* Triangulación de Delaunay                                            */
 	/************************************************************************/
 	cout << "Ejecutando triangulacion ..." << endl;
-	size_t pairNum = ptsL.size();
 	vector<Vec3i> tri;
 	TriSubDiv(ptsL, imgL, tri);
 	

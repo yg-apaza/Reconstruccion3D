@@ -6,7 +6,7 @@ bool isGoodTri(Vec3i &v, vector<Vec3i> & tri)
 	int a = v[0], b = v[1], c = v[2];
 	v[0] = min(a, min(b,c));
 	v[2] = max(a, max(b,c));
-	v[1] = a+b+c-v[0]-v[2];
+	v[1] = a + b + c - v[0] - v[2];
 	if (v[0] == -1) return false;
 	
 	vector<Vec3i>::iterator iter = tri.begin();
@@ -42,7 +42,7 @@ void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri)
 							  sizeof(CvQuadEdge2D),
 							  storage);
 	
-	cvInitSubdivDelaunay2D( subdiv, rc );
+	cvInitSubdivDelaunay2D(subdiv, rc);
 	
 	for (size_t i = 0; i < pts.size(); i++)
 	{
@@ -79,7 +79,8 @@ void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri)
 				verticesIdx[j] = pt->id;
 				t = cvSubdiv2DGetEdge(t, CV_NEXT_AROUND_LEFT);
 			}
-			if (j != iPointNum) continue;
+			if (j != iPointNum)
+				continue;
 			if (isGoodTri(verticesIdx, tri))
 			{
 				polylines(imgShow, &pBuf, &iPointNum, 
@@ -106,7 +107,7 @@ void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri)
 						  1, CV_AA, 0);
 			}
 		}
-		CV_NEXT_SEQ_ELEM( elem_size, reader );
+		CV_NEXT_SEQ_ELEM(elem_size, reader);
 	}
 	
 	char title[100];
