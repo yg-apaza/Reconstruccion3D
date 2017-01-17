@@ -1,7 +1,6 @@
 #include "header.h"
 #include <time.h>
 
-// Triangulación de Delaunay
 bool isGoodTri(Vec3i &v, vector<Vec3i> & tri) 
 {
 	int a = v[0], b = v[1], c = v[2];
@@ -29,6 +28,7 @@ bool isGoodTri(Vec3i &v, vector<Vec3i> & tri)
 	return false;
 }
 
+// Triangulación de Delaunay
 void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri) 
 {
 	CvSubdiv2D* subdiv; // Subdivision
@@ -116,12 +116,9 @@ void TriSubDiv(vector<Point2f> &pts, Mat &img, vector<Vec3i> &tri)
 }
 
 // Calcula las coordenadas 3D
-// para los puntos rectificados pointLeft.y == pointRight.y
-// El origen (0,0) para ambas imágenes es la esquina superior-izquierda de la imagen izquierda
 void StereoTo3D( vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pts3D,
 				float focalLenInPixel, float baselineInMM, Mat img,
 				Point3f &center3D, Vec3f &size3D)
-// Salida: La coordenada del centro de la imagen, y el numero de elementos de pts3D
 {
 	vector<Point2f>::iterator iterL = ptsL.begin(), iterR = ptsR.begin();
 	
@@ -136,19 +133,27 @@ void StereoTo3D( vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pt
 	char str[100];
 	int ptCnt = ptsL.size(), showPtNum = 30, cnt = 0;
 	int showIntv = max(ptCnt / showPtNum, 1);
+	
 	for (; iterL != ptsL.end(); iterL++, iterR++)
 	{
 		xl = iterL->x;
 		xr = iterR->x;
 		ylr = (iterL->y + iterR->y) / 2;
-		// xl debe ser mayor a xr si proviene de la camara izquierda
+		
+		// Formula para obtener X, Y, Z
 		pt3D.z = -focalLenInPixel * baselineInMM / (xl - xr);
 		pt3D.y = -(-ylr + imgH / 2) * pt3D.z / focalLenInPixel;
 		pt3D.x = (imgW / 2 - xl) * pt3D.z / focalLenInPixel;
 		
-		minX = min(minX, pt3D.x); maxX = max(maxX, pt3D.x);
-		minY = min(minY, pt3D.y); maxY = max(maxY, pt3D.y);
-		minZ = min(minZ, pt3D.z); maxZ = max(maxZ, pt3D.z);
+		// Limites de la imagen tridimensional
+		minX = min(minX, pt3D.x);
+		maxX = max(maxX, pt3D.x);
+		minY = min(minY, pt3D.y);
+		maxY = max(maxY, pt3D.y);
+		minZ = min(minZ, pt3D.z);
+		maxZ = max(maxZ, pt3D.z);
+		
+		// Almacena el punto tridimensional obtenido		
 		pts3D.push_back(pt3D);
 		
 		if ((cnt++) % showIntv == 0)
@@ -166,6 +171,8 @@ void StereoTo3D( vector<Point2f> ptsL, vector<Point2f> ptsR, vector<Point3f> &pt
 	center3D.x = (minX + maxX) / 2;
 	center3D.y = (minY + maxY) / 2;
 	center3D.z = (minZ + maxZ) / 2;
+	
+	// Tamanio de la imagen tridimensional
 	size3D[0] = maxX - minX;
 	size3D[1] = maxY - minY;
 	size3D[2] = maxZ - minZ;
