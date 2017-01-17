@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Dec 21 2016)
+// C++ code generated with wxFormBuilder (version Feb 16 2016)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -12,15 +12,15 @@
 FBMainWindow::FBMainWindow( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
-	this->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+	this->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 	this->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
 	
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
-	txtTitle = new wxStaticText( this, wxID_ANY, wxT("Reconstrucción 3D utilizando OpenCV y OpenGL"), wxDefaultPosition, wxSize( -1,20 ), 0 );
+	txtTitle = new wxStaticText( this, wxID_ANY, wxT("Reconstruccion 3D utilizando OpenCV y OpenGL"), wxDefaultPosition, wxSize( -1,20 ), 0 );
 	txtTitle->Wrap( -1 );
-	txtTitle->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
+	txtTitle->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
 	
 	bSizer1->Add( txtTitle, 0, wxALIGN_CENTER|wxALL, 5 );
 	
@@ -32,7 +32,7 @@ FBMainWindow::FBMainWindow( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	labAlgo = new wxStaticText( this, wxID_ANY, wxT("Algoritmos"), wxDefaultPosition, wxDefaultSize, 0 );
 	labAlgo->Wrap( -1 );
-	labAlgo->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
+	labAlgo->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
 	
 	bSizer4->Add( labAlgo, 0, wxALL, 5 );
 	
@@ -49,13 +49,21 @@ FBMainWindow::FBMainWindow( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 	
-	labImg = new wxStaticText( this, wxID_ANY, wxT("Imágenes"), wxDefaultPosition, wxDefaultSize, 0 );
+	labImg = new wxStaticText( this, wxID_ANY, wxT("Imagenes"), wxDefaultPosition, wxDefaultSize, 0 );
 	labImg->Wrap( -1 );
-	labImg->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
+	labImg->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
 	
 	bSizer5->Add( labImg, 0, wxALL, 5 );
 	
 	txtImg = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	#ifdef __WXGTK__
+	if ( !txtImg->HasFlag( wxTE_MULTILINE ) )
+	{
+	txtImg->SetMaxLength( 50 );
+	}
+	#else
+	txtImg->SetMaxLength( 50 );
+	#endif
 	bSizer5->Add( txtImg, 0, wxALIGN_TOP|wxALL, 5 );
 	
 	

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Dec 21 2016)
+// C++ code generated with wxFormBuilder (version Feb 16 2016)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -49,7 +49,7 @@ class FBMainWindow : public wxFrame
 	
 	public:
 		
-		FBMainWindow( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("RECONSTRUCCIÓN 3D"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 378,207 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		FBMainWindow( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("RECONSTRUCCION 3D"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 378,207 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~FBMainWindow();
 	

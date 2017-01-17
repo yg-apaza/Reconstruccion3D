@@ -24,7 +24,7 @@ void MyMainWindow::execute( wxCommandEvent& event )  {
 		g_algo = BLOCK_MATCHING;
 	}
 	//Carga de las imágenes
-	String filename = txtImg->GetValue().c_str();
+	String filename = std::string(txtImg->GetValue().c_str());
 	Mat imgL = imread("Images/left/"+filename); 
 	Mat	imgR = imread("Images/right/"+filename);
 
@@ -71,7 +71,7 @@ void MyMainWindow::execute( wxCommandEvent& event )  {
 	float focalLenInPixel = 3740 * resizeScale, baselineInMM = 160;
 	Point3f center3D;
 	Vec3f size3D;
-	float scale = .2; // Escala de la coordenada z para concentrar el espacio
+	float scale = 0.2; // Escala de la coordenada z para concentrar el espacio
 	focalLenInPixel *= scale;
 	
 	cout << "Calculando coordenadas 3D ..." << endl;
