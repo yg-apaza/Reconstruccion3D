@@ -51,7 +51,8 @@ path=wxfbWindows.h
 cursor=9:0
 [other]
 path=README.md
-cursor=0:0
+cursor=21:174
+open=true
 [other]
 path=manifest.xml
 cursor=0:0
